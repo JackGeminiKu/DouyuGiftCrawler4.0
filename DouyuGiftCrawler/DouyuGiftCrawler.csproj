@@ -111,7 +111,7 @@
     <Compile Include="src\Jack4net.Proxy.Crawlers\ProxyCrawler_Xici.cs" />
     <Compile Include="src\Jack4net.Proxy\ProxyCache.cs" />
     <Compile Include="src\Jack4net.Proxy\ProxyCacheException.cs" />
-    <Compile Include="src\Jack4net.Proxy\ProxyResult.cs" />
+    <Compile Include="src\Jack4net.Proxy\ProxyCrawlResult.cs" />
     <Compile Include="src\Jack4net.Proxy\ProxyValidator.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

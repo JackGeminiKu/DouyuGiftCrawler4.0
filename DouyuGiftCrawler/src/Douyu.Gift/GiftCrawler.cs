@@ -9,6 +9,7 @@ using System.Threading;
 using Jack4net.Proxy;
 using Douyu.Gift;
 using DouyuGiftCrawler;
+using System.Diagnostics;
 
 namespace Douyu.Gift
 {
@@ -29,21 +30,27 @@ namespace Douyu.Gift
             var page = "";
             while (true) {
                 // 申请代理
-                LogService.Debug("[爬礼物]: 申请代理...");
                 while (Proxy == null) {
+                    LogService.Debug("[爬礼物] 申请代理...");
                     Proxy = ProxyPool.GetProxy();
-                    if (Proxy == null) MyThread.Wait(1000);
-                }
+                    if (Proxy == null) {
+                        MyThread.Wait(1000);
+                        continue;
+                    }
 
-                // 使用代理
-                LogService.DebugFormat("[爬礼物] 使用代理, {0}", Proxy.Address);
-                webClient.Proxy = Proxy;
+                    // 使用代理
+                    LogService.DebugFormat("[爬礼物] 使用代理, {0}", Proxy.Address);
+                    webClient.Proxy = Proxy;
+                }
 
                 // 获取网页
                 try {
                     LogService.DebugFormat("[爬礼物] 准备爬取礼物页面, {0}", url);
                     GiftCrawler.OnCrawlingRoom(roomNumber);
+
+                    var watcher = Stopwatch.StartNew();
                     page = Encoding.UTF8.GetString(webClient.DownloadData(url));
+                    LogService.DebugFormat("[爬礼物] 页面爬取时间 {0} ms", watcher.ElapsedMilliseconds);
 
                     if (page.Contains("error") == false) {
                         LogService.ErrorFormat("[爬礼物] 礼物页面是乱码!!!");
@@ -53,6 +60,7 @@ namespace Douyu.Gift
                         continue;
                     }
 
+                    GiftCrawler.OnCrawledRoom(roomNumber);
                     LogService.DebugFormat("[爬礼物] 成功爬取礼物页面, {0}", url);
                 } catch (WebException webEx) {
                     // 代理无效了?
@@ -150,7 +158,10 @@ namespace Douyu.Gift
             var giftCrawler = new GiftCrawler();
             //giftCrawler.CrawlingRoom += new EventHandler<CrawlingRoomEventArgs>(GiftCrawler_CrawlingRoom);
             while (true) {
+                var watcher = Stopwatch.StartNew();
                 giftCrawler.CrawlOnePage();
+                LogService.DebugFormat("爬取一个网页, 总耗时: {0} ms",watcher.ElapsedMilliseconds);
+                LogService.Debug("");
             }
         }
 
@@ -158,12 +169,20 @@ namespace Douyu.Gift
 
         #region "礼物爬虫事件"
 
-        public static event EventHandler<CrawlingRoomEventArgs> CrawlingRoom;
+        public static event EventHandler<CrawlRoomEventArgs> CrawlingRoom;
 
         static void OnCrawlingRoom(int roomNumber)
         {
             if (CrawlingRoom != null)
-                CrawlingRoom(null, new CrawlingRoomEventArgs(Thread.CurrentThread.Name, roomNumber));
+                CrawlingRoom(null, new CrawlRoomEventArgs(Thread.CurrentThread.Name, roomNumber));
+        }
+
+        public static event EventHandler<CrawlRoomEventArgs> CrawledRoom;
+
+        static void OnCrawledRoom(int roomNumber)
+        {
+            if (CrawledRoom != null)
+                CrawledRoom(null, new CrawlRoomEventArgs(Thread.CurrentThread.Name, roomNumber));
         }
 
         public static event EventHandler<CrawlingGiftEventArgs> CrawlingGift;
@@ -171,7 +190,7 @@ namespace Douyu.Gift
         static void OnCrawlingGift(Gift gift)
         {
             if (CrawlingGift != null)
-                CrawlingGift(null, new CrawlingGiftEventArgs(gift));
+                CrawlingGift(null, new CrawlingGiftEventArgs(Thread.CurrentThread.Name, gift));
         }
 
         //static void GiftCrawler_CrawlingRoom(object sender, CrawlingRoomEventArgs e)
@@ -186,11 +205,11 @@ namespace Douyu.Gift
 
 
     /// <summary>
-    /// crawling gift evetn args
+    /// crawl gift evetn args
     /// </summary>
-    public class CrawlingRoomEventArgs : EventArgs
+    public class CrawlRoomEventArgs : EventArgs
     {
-        public CrawlingRoomEventArgs(string crawlerName, int roomNumber)
+        public CrawlRoomEventArgs(string crawlerName, int roomNumber)
         {
             CrawlerName = crawlerName;
             RoomNumber = roomNumber;
@@ -205,11 +224,13 @@ namespace Douyu.Gift
 
     public class CrawlingGiftEventArgs : EventArgs
     {
-        public CrawlingGiftEventArgs(Gift gift)
+        public CrawlingGiftEventArgs(string crawlerName, Gift gift)
         {
+            CrawlerName = crawlerName;
             Gift = gift;
         }
 
+        public string CrawlerName { get; private set; }
         public Gift Gift { get; private set; }
     }
 }

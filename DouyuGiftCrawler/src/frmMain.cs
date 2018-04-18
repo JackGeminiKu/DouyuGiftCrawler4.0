@@ -32,9 +32,10 @@ namespace DouyuGiftCrawler
             ProxyPool.ProxyCrawled += new EventHandler<ProxyCrawledEventArgs>(ProxyPool_ProxyCrawled);
             ProxyPool.ProxyValidated += new EventHandler<ProxyValidatedEventArgs>(ProxyPool_ProxyValidated);
             GiftCrawler.CrawlingGift += new EventHandler<CrawlingGiftEventArgs>(GiftCrawler_CrawlingGift);
-            GiftCrawler.CrawlingRoom += new EventHandler<CrawlingRoomEventArgs>(GiftCrawler_CrawlingRoom);
+            GiftCrawler.CrawlingRoom += new EventHandler<CrawlRoomEventArgs>(GiftCrawler_CrawlingRoom);
+            GiftCrawler.CrawledRoom += new EventHandler<CrawlRoomEventArgs>(GiftCrawler_CrawledRoom);
             tmrCrawlSpeed.Start();
-            tmrProxyResult.Start();
+            tmrResult.Start();
         }
 
         void ProxyPool_ProxyCrawled(object sender, ProxyCrawledEventArgs e)
@@ -48,30 +49,36 @@ namespace DouyuGiftCrawler
         }
 
         int _currentRoomNumber = 0;
-        int _firstRoomNumber = -1;
+        int _lastRoomNumber = -1;
         DateTime _startCrawlingTime;
 
-        void GiftCrawler_CrawlingRoom(object sender, CrawlingRoomEventArgs e)
+        void GiftCrawler_CrawlingRoom(object sender, CrawlRoomEventArgs e)
         {
             var roomNumber = (e.RoomNumber > _currentRoomNumber) ?
                 (_currentRoomNumber = e.RoomNumber) : _currentRoomNumber;
             txtMaxRoomNumber.SetTextCrossThread(roomNumber.ToString());
 
-            // 记录开始爬去时的一些数据
-            if (_firstRoomNumber < 0) {
-                _firstRoomNumber = Properties.Settings.Default.CurrentRoom;
+            // 记录开始爬取时的一些数据
+            if (_lastRoomNumber < 0) {
+                _lastRoomNumber = Properties.Settings.Default.CurrentRoom;
                 _startCrawlingTime = DateTime.Now;
             }
         }
 
+        void GiftCrawler_CrawledRoom(object sender, CrawlRoomEventArgs e)
+        {
+            GiftCrawlResult.UpdateRoomCount(e.CrawlerName, 1);
+        }
+
         private void tmrCrawlSpeed_Tick(object sender, EventArgs e)
         {
-            var speed = (_currentRoomNumber - _firstRoomNumber) / (DateTime.Now - _startCrawlingTime).TotalSeconds;
+            var speed = (_currentRoomNumber - _lastRoomNumber) / (DateTime.Now - _startCrawlingTime).TotalSeconds;
             txtCrawlSpeed.SetTextCrossThread(speed.ToString("0.0"));
         }
 
         void GiftCrawler_CrawlingGift(object sender, CrawlingGiftEventArgs e)
         {
+            GiftCrawlResult.UpdateGiftCount(e.CrawlerName, 1);
             ShowLog(txtGiftLog, "找到礼物: {0}", e.Gift.Name);
         }
 
@@ -85,7 +92,7 @@ namespace DouyuGiftCrawler
         {
             ProxyPool.BeginCrawl();
             tmrProxyPoolStatus.Start();
-            tmrProxyResult.Start();
+            tmrResult.Start();
         }
 
         #region 启动礼物爬虫
@@ -132,14 +139,16 @@ namespace DouyuGiftCrawler
 
         #region 代理统计结果
 
-        private void tmrProxySiteInfo_Tick(object sender, EventArgs e)
+        private void tmrResult_Tick(object sender, EventArgs e)
         {
-            dgvProxySiteInfo.DataSource = ProxyResult.GetAll();
+            dgvProxySiteInfo.DataSource = ProxyCrawlResult.GetAllResult();
+            dgvGiftCrawlResult.DataSource = GiftCrawlResult.GetAllResult();
         }
 
         private void btnRefreshProxySiteInfo_Click(object sender, EventArgs e)
         {
-            dgvProxySiteInfo.DataSource = ProxyResult.GetAll();
+            dgvProxySiteInfo.DataSource = ProxyCrawlResult.GetAllResult();
+            dgvGiftCrawlResult.DataSource = GiftCrawlResult.GetAllResult();
         }
 
         #endregion

@@ -12,12 +12,12 @@ namespace Jack4net.Proxy
     /// <summary>
     /// proxy result
     /// </summary>
-    public static class ProxyResult
+    public static class ProxyCrawlResult
     {
         static IDbConnection _connection;
         static readonly object _dbLocker = new object();
 
-        static ProxyResult()
+        static ProxyCrawlResult()
         {
             _connection = new SqlConnection(DouyuGiftCrawler.Properties.Settings.Default.ConnectionString);
         }
@@ -70,7 +70,7 @@ namespace Jack4net.Proxy
             }
         }
 
-        public static SortableBindingList<ProxyResultItem> GetAll()
+        public static SortableBindingList<ProxyResultItem> GetAllResult()
         {
             lock (_dbLocker) {
                 var allInfo = _connection.Query(

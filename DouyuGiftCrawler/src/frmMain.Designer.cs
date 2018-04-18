@@ -41,10 +41,11 @@
             this.nudCrawlerCount = new System.Windows.Forms.NumericUpDown();
             this.btnResetRoom = new System.Windows.Forms.Button();
             this.dgvProxySiteInfo = new System.Windows.Forms.DataGridView();
-            this.tmrProxyResult = new System.Windows.Forms.Timer(this.components);
+            this.tmrResult = new System.Windows.Forms.Timer(this.components);
             this.btnRefreshProxySiteInfo = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
             this.txtCrawlSpeed = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.txtMaxRoomNumber = new System.Windows.Forms.TextBox();
@@ -52,24 +53,24 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
             this.txtGiftLog = new System.Windows.Forms.TextBox();
+            this.dgvGiftCrawlResult = new System.Windows.Forms.DataGridView();
             this.tmrCrawlSpeed = new System.Windows.Forms.Timer(this.components);
-            this.label7 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nudCrawlerCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProxySiteInfo)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvGiftCrawlResult)).BeginInit();
             this.SuspendLayout();
             // 
             // txtProxyLog
             // 
             this.txtProxyLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtProxyLog.Location = new System.Drawing.Point(3, 146);
+            this.txtProxyLog.Location = new System.Drawing.Point(3, 166);
             this.txtProxyLog.Multiline = true;
             this.txtProxyLog.Name = "txtProxyLog";
             this.txtProxyLog.ReadOnly = true;
-            this.tableLayoutPanel1.SetRowSpan(this.txtProxyLog, 2);
-            this.txtProxyLog.Size = new System.Drawing.Size(623, 713);
+            this.txtProxyLog.Size = new System.Drawing.Size(623, 337);
             this.txtProxyLog.TabIndex = 1;
             // 
             // btnStartCrawlProxy
@@ -175,16 +176,16 @@
             this.dgvProxySiteInfo.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvProxySiteInfo.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvProxySiteInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvProxySiteInfo.Location = new System.Drawing.Point(632, 146);
+            this.dgvProxySiteInfo.Location = new System.Drawing.Point(632, 166);
             this.dgvProxySiteInfo.Name = "dgvProxySiteInfo";
             this.dgvProxySiteInfo.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvProxySiteInfo.Size = new System.Drawing.Size(623, 295);
+            this.dgvProxySiteInfo.Size = new System.Drawing.Size(623, 337);
             this.dgvProxySiteInfo.TabIndex = 0;
             // 
-            // tmrProxyResult
+            // tmrResult
             // 
-            this.tmrProxyResult.Interval = 60000;
-            this.tmrProxyResult.Tick += new System.EventHandler(this.tmrProxySiteInfo_Tick);
+            this.tmrResult.Interval = 60000;
+            this.tmrResult.Tick += new System.EventHandler(this.tmrResult_Tick);
             // 
             // btnRefreshProxySiteInfo
             // 
@@ -206,15 +207,16 @@
             this.tableLayoutPanel1.Controls.Add(this.dgvProxySiteInfo, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.panel2, 2, 1);
-            this.tableLayoutPanel1.Controls.Add(this.txtGiftLog, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.txtGiftLog, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.dgvGiftCrawlResult, 1, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 32.31132F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 67.68868F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 417F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1424, 862);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 305F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1424, 812);
             this.tableLayoutPanel1.TabIndex = 18;
             // 
             // panel1
@@ -238,8 +240,17 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1418, 137);
+            this.panel1.Size = new System.Drawing.Size(1418, 157);
             this.panel1.TabIndex = 0;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(629, 84);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(48, 13);
+            this.label7.TabIndex = 19;
+            this.label7.Text = "房间/秒";
             // 
             // txtCrawlSpeed
             // 
@@ -280,9 +291,9 @@
             this.panel2.Controls.Add(this.label4);
             this.panel2.Controls.Add(this.btnRefreshProxySiteInfo);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(1261, 146);
+            this.panel2.Location = new System.Drawing.Point(1261, 166);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(160, 295);
+            this.panel2.Size = new System.Drawing.Size(160, 337);
             this.panel2.TabIndex = 2;
             // 
             // label4
@@ -297,32 +308,32 @@
             // txtGiftLog
             // 
             this.txtGiftLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtGiftLog.Location = new System.Drawing.Point(632, 447);
+            this.txtGiftLog.Location = new System.Drawing.Point(3, 509);
             this.txtGiftLog.Multiline = true;
             this.txtGiftLog.Name = "txtGiftLog";
             this.txtGiftLog.ReadOnly = true;
-            this.txtGiftLog.Size = new System.Drawing.Size(623, 412);
+            this.txtGiftLog.Size = new System.Drawing.Size(623, 300);
             this.txtGiftLog.TabIndex = 3;
+            // 
+            // dgvGiftCrawlResult
+            // 
+            this.dgvGiftCrawlResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvGiftCrawlResult.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvGiftCrawlResult.Location = new System.Drawing.Point(632, 509);
+            this.dgvGiftCrawlResult.Name = "dgvGiftCrawlResult";
+            this.dgvGiftCrawlResult.Size = new System.Drawing.Size(623, 300);
+            this.dgvGiftCrawlResult.TabIndex = 4;
             // 
             // tmrCrawlSpeed
             // 
             this.tmrCrawlSpeed.Interval = 3000;
             this.tmrCrawlSpeed.Tick += new System.EventHandler(this.tmrCrawlSpeed_Tick);
             // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(629, 84);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(48, 13);
-            this.label7.TabIndex = 19;
-            this.label7.Text = "房间/秒";
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1424, 862);
+            this.ClientSize = new System.Drawing.Size(1424, 812);
             this.Controls.Add(this.tableLayoutPanel1);
             this.MaximizeBox = false;
             this.Name = "frmMain";
@@ -337,6 +348,7 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvGiftCrawlResult)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -356,7 +368,7 @@
         private System.Windows.Forms.NumericUpDown nudCrawlerCount;
         private System.Windows.Forms.Button btnResetRoom;
         private System.Windows.Forms.DataGridView dgvProxySiteInfo;
-        private System.Windows.Forms.Timer tmrProxyResult;
+        private System.Windows.Forms.Timer tmrResult;
         private System.Windows.Forms.Button btnRefreshProxySiteInfo;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Panel panel1;
@@ -369,6 +381,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Timer tmrCrawlSpeed;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.DataGridView dgvGiftCrawlResult;
     }
 }
 

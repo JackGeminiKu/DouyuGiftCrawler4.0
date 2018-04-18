@@ -29,7 +29,7 @@ namespace Jack4net.Proxy
         public static void BeginCrawl()
         {
             LogService.GetLogger("Debug").Debug("ProxySite, CrawledCount, ValidCount, InvalidCount, UnvalidatedCount, ValidPercent");
-            foreach (var item in ProxyResult.GetAll()) {
+            foreach (var item in ProxyCrawlResult.GetAllResult()) {
                 LogService.GetLogger("Debug").DebugFormat("{0}, {1}, {2}, {3}, {4}, {5}",
                     item.ProxySite, item.CrawledCount, item.ValidCount, item.InvalidCount,
                     item.UnvalidatedCount, item.ValidPercent);
@@ -38,7 +38,7 @@ namespace Jack4net.Proxy
 
 
             ProxyCache.Clear();
-            ProxyResult.Clear();
+            ProxyCrawlResult.Clear();
             _tmrGetProxy = new System.Threading.Timer(new TimerCallback(CrawlProxy), null, 0, 1000 * 60 * 30);
         }
 
@@ -88,7 +88,7 @@ namespace Jack4net.Proxy
 
         static void OnProxyCrawled(ProxyCrawledEventArgs e)
         {
-            ProxyResult.UpdateCrawledCount(e.ProxySite, 1);
+            ProxyCrawlResult.UpdateCrawledCount(e.ProxySite, 1);
 
             if (ProxyCrawled != null)
                 ProxyCrawled(null, e);
@@ -113,9 +113,9 @@ namespace Jack4net.Proxy
         static void OnProxyValidated(string ip, int port, string proxySite, bool isValid)
         {
             if (isValid) {
-                ProxyResult.UpdateValidCount(proxySite, 1);
+                ProxyCrawlResult.UpdateValidCount(proxySite, 1);
             } else {
-                ProxyResult.UpdateInvalidCount(proxySite, 1);
+                ProxyCrawlResult.UpdateInvalidCount(proxySite, 1);
             }
 
             if (ProxyValidated != null)

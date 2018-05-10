@@ -71,8 +71,8 @@ namespace Jack4net.Proxy
                 }
 
                 count = _connection.Execute(
-                    "insert into Proxy(IP, Port, IsUsing, CrawlFrom) values(@Ip, @Port, 0, @CrawlFrom)",
-                    new { Ip = ip, Port = port, CrawlFrom = proxySite }
+                    "insert into Proxy(IP, Port, IsUsing, CrawledFrom) values(@Ip, @Port, 0, @CrawledFrom)",
+                    new { Ip = ip, Port = port, CrawledFrom = proxySite }
                 );
 
                 if (count != 1)

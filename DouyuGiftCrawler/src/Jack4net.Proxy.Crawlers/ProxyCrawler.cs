@@ -10,11 +10,11 @@ using AngleSharp.Parser.Html;
 namespace Jack4net.Proxy.Crawlers
 {
     /// <summary>
-    /// proxy crawler
+    /// proxy crawler base
     /// </summary>
-    public abstract class ProxyCrawler
+    public abstract class ProxyCrawlerBase
     {
-        public ProxyCrawler()
+        public ProxyCrawlerBase()
         {
             Urls = new List<string>();
         }
@@ -28,20 +28,22 @@ namespace Jack4net.Proxy.Crawlers
                 do {
                     try {
                         LogService.DebugFormat("[代理] 爬取代理 " + url);
-                        var webPage = CrawlProxy(client, url);
+                        var pageBytes = client.DownloadData(url);
+                        var page = ToPageString(pageBytes);
 
                         LogService.DebugFormat("[代理] 解析代理 " + url);
-                        ParseWebPage(webPage, url);
+                        ParseWebPage(page, url);
                         break;
                     } catch (Exception ex) {
                         LogService.ErrorFormat(ex.ToString());
-                        var proxy = ProxyPool.GetRandomProxy();
-                        if (proxy != null) {
-                            LogService.DebugFormat("[代理] 使用代理 - {0}", proxy.Address);
-                            client.Proxy = proxy;
-                        }
-                        MyThread.Wait(3000);
-                        continue;
+                        //var proxy = ProxyPool.GetRandomProxy();
+                        //if (proxy != null) {
+                        //    LogService.DebugFormat("[代理] 使用代理 - {0}", proxy.Address);
+                        //    client.Proxy = proxy;
+                        //}
+                        //MyThread.Wait(3000);
+                        //continue;
+                        break;
                     }
                 } while (true);
 
@@ -51,7 +53,7 @@ namespace Jack4net.Proxy.Crawlers
 
         protected abstract WebClient CreateWebClient();
 
-        protected abstract string CrawlProxy(WebClient client, string url);
+        protected abstract string ToPageString(byte[] values);
 
         protected abstract void ParseWebPage(string webPage, string url);
 

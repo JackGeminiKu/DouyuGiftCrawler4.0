@@ -8,6 +8,7 @@ using Jack4net.Log;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 using Douyu.Gift;
+using System.Diagnostics;
 
 namespace Douyu.Gift
 {
@@ -46,7 +47,6 @@ namespace Douyu.Gift
 
                 // 添加新礼物 
                 if (findRow == null) {
-                    LogService.DebugFormat("[礼物] 找到新礼物 {0}", gift.Name);
                     DataRow newRow = _dataSet.Tables["gift_category"].NewRow();
                     newRow["id"] = gift.Id;
                     newRow["name"] = gift.Name;
@@ -65,15 +65,13 @@ namespace Douyu.Gift
 
                 // 礼物信息更新了?
                 if ((float)findRow["price"] != gift.Price || (float)findRow["experience"] != gift.Experience) {
-                    LogService.DebugFormat("[礼物] 礼物更新 {0}", gift.Name);
+                    var watch = Stopwatch.StartNew();
                     findRow["price"] = gift.Price;
                     findRow["experience"] = gift.Experience;
                     findRow["update_time"] = DateTime.Now;
                     _adapter.Update(_dataSet, "gift_category");
                 }
             }
-
-
         }
     }
 }

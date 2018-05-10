@@ -14,53 +14,40 @@ namespace Douyu.Gift
         static readonly object _dicLocker = new object();
         static Dictionary<string, GiftCrawlResultItem> _resultDic = new Dictionary<string, GiftCrawlResultItem>();
 
-        public static void UpdateRoomCount(string crawlerName, int count)
+        public static void Initialize(string crawlerName, DateTime startTime)
         {
             lock (_dicLocker) {
                 if (!_resultDic.ContainsKey(crawlerName)) {
                     var item = new GiftCrawlResultItem(crawlerName);
-                    item.RoomCount = 1;
+                    item.StartTime = startTime;
                     _resultDic.Add(crawlerName, item);
                     return;
                 } else {
                     var item = _resultDic[crawlerName];
-                    item.RoomCount += count;
+                    item.StartTime = startTime;
                 }
+            }
+        }
+
+        public static void UpdateRoomCount(string crawlerName, int count)
+        {
+            lock (_dicLocker) {
+                var item = _resultDic[crawlerName];
+                item.RoomCount += count;
             }
         }
 
         public static void UpdateGiftCount(string crawlerName, int count)
         {
             lock (_dicLocker) {
-                if (!_resultDic.ContainsKey(crawlerName)) {
-                    var item = new GiftCrawlResultItem(crawlerName);
-                    item.GiftCount = 1;
-                    _resultDic.Add(crawlerName, item);
-                    return;
-                } else {
-                    var item = _resultDic[crawlerName];
-                    item.GiftCount += count;
-                }
-            }
-        }
-
-        public static void UpdateAverageSpeed(string crawlerName, int avgSpeed)
-        {
-            lock (_dicLocker) {
-                if (!_resultDic.ContainsKey(crawlerName)) {
-                    var item = new GiftCrawlResultItem(crawlerName);
-                    _resultDic.Add(crawlerName, item);
-                    return;
-                } else {
-                    var item = _resultDic[crawlerName];
-                    item.AverageSpeed = avgSpeed;
-                }
+                var item = _resultDic[crawlerName];
+                item.GiftCount += count;
             }
         }
 
         public static SortableBindingList<GiftCrawlResultItem> GetAllResult()
         {
-            lock (_resultDic) {
+            lock (_dicLocker) {
                 SortableBindingList<GiftCrawlResultItem> items = new SortableBindingList<GiftCrawlResultItem>();
                 foreach (KeyValuePair<string, GiftCrawlResultItem> item in _resultDic) {
                     items.Add(item.Value);
@@ -77,12 +64,23 @@ namespace Douyu.Gift
         {
             CrawlerName = crawlerName;
             RoomCount = GiftCount = 0;
-            AverageSpeed = 0;
         }
 
         public string CrawlerName { get; private set; }
         public int RoomCount { get; set; }
         public int GiftCount { get; set; }
-        public double AverageSpeed { get; set; }
+        public DateTime StartTime { get; set; }
+        public long ElapsedTime
+        {
+            get
+            {
+                return (long)((DateTime.Now - StartTime).TotalSeconds);
+            }
+        }
+
+        public string RoomSpeed
+        {
+            get { return (RoomCount / (DateTime.Now - StartTime).TotalSeconds).ToString("0.00"); }
+        }
     }
 }

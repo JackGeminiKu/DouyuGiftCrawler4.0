@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace Jack4net.Proxy.Crawlers
 {
-    public class ProxyCrawlerData5u : ProxyCrawler
+    public class ProxyCrawlerData5u : ProxyCrawlerBase
     {
         public ProxyCrawlerData5u()
         {
@@ -35,9 +35,9 @@ namespace Jack4net.Proxy.Crawlers
             return client;
         }
 
-        protected override string CrawlProxy(WebClient client, string url)
+        protected override string ToPageString(byte[] bytes)
         {
-            return Encoding.UTF8.GetString(client.DownloadData(url));
+            return Encoding.UTF8.GetString(bytes);
         }
 
         protected override void ParseWebPage(string webPage, string url)

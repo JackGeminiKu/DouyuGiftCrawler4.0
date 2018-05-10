@@ -12,7 +12,7 @@ using System.Diagnostics;
 
 namespace Jack4net.Proxy.Crawlers
 {
-    public class ProxyCrawler_Ip3366 : ProxyCrawler
+    public class ProxyCrawler_Ip3366 : ProxyCrawlerBase
     {
         public ProxyCrawler_Ip3366()
         {
@@ -37,9 +37,9 @@ namespace Jack4net.Proxy.Crawlers
             return client;
         }
 
-        protected override string CrawlProxy(WebClient client, string url)
+        protected override string ToPageString(byte[] bytes)
         {
-            return Encoding.GetEncoding("GB2312").GetString(client.DownloadData(url));
+            return Encoding.GetEncoding("GB2312").GetString(bytes);
         }
 
         protected override void ParseWebPage(string webPage, string url)

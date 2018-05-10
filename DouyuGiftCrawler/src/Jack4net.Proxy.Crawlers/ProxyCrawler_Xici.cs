@@ -9,19 +9,18 @@ using System.Threading;
 
 namespace Jack4net.Proxy.Crawlers
 {
-    public class ProxyCrawler_Xici : ProxyCrawler
+    public class ProxyCrawler_Xici : ProxyCrawlerBase
     {
         public ProxyCrawler_Xici()
         {
-            var urlList = new List<string>();
             for (int i = 1; i <= 10; ++i) {
-                urlList.Add("http://www.xicidaili.com/nn/" + i);
+                Urls.Add("http://www.xicidaili.com/nn/" + i);
             }
             for (int i = 1; i <= 10; ++i) {
-                urlList.Add("http://www.xicidaili.com/nt/" + i);
+                Urls.Add("http://www.xicidaili.com/nt/" + i);
             }
             for (int i = 1; i <= 10; ++i) {
-                urlList.Add("http://www.xicidaili.com/wt/" + i);
+                Urls.Add("http://www.xicidaili.com/wt/" + i);
             }
         }
 
@@ -30,9 +29,9 @@ namespace Jack4net.Proxy.Crawlers
             return new WebClient();
         }
 
-        protected override string CrawlProxy(WebClient client, string url)
+        protected override string ToPageString(byte[] bytes)
         {
-            return Encoding.UTF8.GetString(client.DownloadData(url));
+            return Encoding.UTF8.GetString(bytes);
         }
 
         protected override void ParseWebPage(string webPage, string url)

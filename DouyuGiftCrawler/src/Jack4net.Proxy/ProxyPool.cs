@@ -22,27 +22,18 @@ namespace Jack4net.Proxy
     public static class ProxyPool
     {
         static System.Threading.Timer _tmrGetProxy;
-        static List<ProxyCrawler> _proxyCrawlerList = new List<ProxyCrawler>();
+        static Dictionary<string, string> _proxyTable = new Dictionary<string, string>();
 
         #region Crawl & Validate Proxy
 
         public static void BeginCrawl()
         {
-            LogService.GetLogger("Debug").Debug("ProxySite, CrawledCount, ValidCount, InvalidCount, UnvalidatedCount, ValidPercent");
-            foreach (var item in ProxyCrawlResult.GetAllResult()) {
-                LogService.GetLogger("Debug").DebugFormat("{0}, {1}, {2}, {3}, {4}, {5}",
-                    item.ProxySite, item.CrawledCount, item.ValidCount, item.InvalidCount,
-                    item.UnvalidatedCount, item.ValidPercent);
-            }
-            LogService.GetLogger("Debug").Debug("---------------------------------------------------");
-
-
             ProxyCache.Clear();
             ProxyCrawlResult.Clear();
             _tmrGetProxy = new System.Threading.Timer(new TimerCallback(CrawlProxy), null, 0, 1000 * 60 * 30);
         }
 
-        public static event EventHandler<CrawlBeginEventArgs> CrawlBegin;
+        static List<ProxyCrawlerBase> _proxyCrawlerList = new List<ProxyCrawlerBase>();
 
         static void CrawlProxy(object obj)
         {
@@ -70,18 +61,24 @@ namespace Jack4net.Proxy
             }
 
             foreach (var crawler in _proxyCrawlerList) {
-                Action action = new Action(crawler.CrawlProxy);
-                action.BeginInvoke(null, null);
+                crawler.CrawlProxy();
+                //Action action = new Action(crawler.CrawlProxy);
+                //action.BeginInvoke(null, null);
             }
         }
 
+        public static event EventHandler<CrawlBeginEventArgs> CrawlBegin;
+
         static void proxyCrawler_ProxyCrawled(object sender, ProxyCrawledEventArgs e)
         {
+            //Action<ProxyCrawledEventArgs> proxyCrawled = OnProxyCrawled;
+            //proxyCrawled.BeginInvoke(e, null, null);
             OnProxyCrawled(e);
 
-            Func<string, int, string, bool> proxyValidate = new Func<string, int, string, bool>(ProxyValidator.Validate);
-            proxyValidate.BeginInvoke(e.Ip, e.Port, e.ProxySite, ProxyValidateCallback,
-               new object[] { e.Ip, e.Port, e.ProxySite });
+            //Func<string, int, string, bool> validateProxy = new Func<string, int, string, bool>(ProxyValidator.Validate);
+            //validateProxy.BeginInvoke(e.Ip, e.Port, e.ProxySite, ProxyValidateCallback,
+            //   new object[] { e.Ip, e.Port, e.ProxySite });
+            ProxyValidator.Validate(e.Ip, e.Port, e.ProxySite);
         }
 
         public static event EventHandler<ProxyCrawledEventArgs> ProxyCrawled;
@@ -97,8 +94,10 @@ namespace Jack4net.Proxy
         static void ProxyValidateCallback(IAsyncResult ar)
         {
             AsyncResult result = (AsyncResult)ar;
+
             Func<string, int, string, bool> func = (Func<string, int, string, bool>)result.AsyncDelegate;
             var isValid = func.EndInvoke(ar);
+
             var proxyItems = (object[])ar.AsyncState;
             string ip = (string)proxyItems[0];
             int port = (int)proxyItems[1];
@@ -119,7 +118,7 @@ namespace Jack4net.Proxy
             }
 
             if (ProxyValidated != null)
-                ProxyValidated(null, new ProxyValidatedEventArgs(ip, port, proxySite, isValid));
+                ProxyValidated(null, new ProxyValidatedEventArgs(proxySite, ip, port, isValid));
         }
 
         #endregion

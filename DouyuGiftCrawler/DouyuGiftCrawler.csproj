@@ -109,9 +109,12 @@
     <Compile Include="src\Jack4net.Proxy.Crawlers\ProxyCrawler_66Ip.cs" />
     <Compile Include="src\Jack4net.Proxy.Crawlers\ProxyCrawler_Data5u.cs" />
     <Compile Include="src\Jack4net.Proxy.Crawlers\ProxyCrawler_Xici.cs" />
+    <Compile Include="src\Jack4net.Proxy\ConcurrentDirectionary.cs" />
+    <Compile Include="src\Jack4net.Proxy\ProxyCrawler.cs" />
     <Compile Include="src\Jack4net.Proxy\ProxyCache.cs" />
     <Compile Include="src\Jack4net.Proxy\ProxyCacheException.cs" />
     <Compile Include="src\Jack4net.Proxy\ProxyCrawlResult.cs" />
+    <Compile Include="src\Jack4net.Proxy\ProxyInfo.cs" />
     <Compile Include="src\Jack4net.Proxy\ProxyValidator.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

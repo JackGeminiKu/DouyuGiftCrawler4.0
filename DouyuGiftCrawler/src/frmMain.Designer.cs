@@ -45,6 +45,8 @@
             this.btnRefreshProxySiteInfo = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.txtCrawlSpeed = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -222,6 +224,8 @@
             // panel1
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.panel1, 3);
+            this.panel1.Controls.Add(this.button2);
+            this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.txtCrawlSpeed);
             this.panel1.Controls.Add(this.label6);
@@ -242,6 +246,26 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1418, 157);
             this.panel1.TabIndex = 0;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(780, 57);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(102, 23);
+            this.button2.TabIndex = 22;
+            this.button2.Text = "proxy validate";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(780, 28);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(102, 23);
+            this.button1.TabIndex = 21;
+            this.button1.Text = "crawl proxy";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // label7
             // 
@@ -317,10 +341,12 @@
             // 
             // dgvGiftCrawlResult
             // 
+            this.dgvGiftCrawlResult.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvGiftCrawlResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvGiftCrawlResult.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvGiftCrawlResult.Location = new System.Drawing.Point(632, 509);
             this.dgvGiftCrawlResult.Name = "dgvGiftCrawlResult";
+            this.dgvGiftCrawlResult.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvGiftCrawlResult.Size = new System.Drawing.Size(623, 300);
             this.dgvGiftCrawlResult.TabIndex = 4;
             // 
@@ -382,6 +408,8 @@
         private System.Windows.Forms.Timer tmrCrawlSpeed;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.DataGridView dgvGiftCrawlResult;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
     }
 }
 

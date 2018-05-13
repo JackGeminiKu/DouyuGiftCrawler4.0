@@ -57,6 +57,7 @@
             this.txtGiftLog = new System.Windows.Forms.TextBox();
             this.dgvGiftCrawlResult = new System.Windows.Forms.DataGridView();
             this.tmrCrawlSpeed = new System.Windows.Forms.Timer(this.components);
+            this.btnDebug = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudCrawlerCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProxySiteInfo)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
@@ -68,11 +69,11 @@
             // txtProxyLog
             // 
             this.txtProxyLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtProxyLog.Location = new System.Drawing.Point(3, 166);
+            this.txtProxyLog.Location = new System.Drawing.Point(3, 154);
             this.txtProxyLog.Multiline = true;
             this.txtProxyLog.Name = "txtProxyLog";
             this.txtProxyLog.ReadOnly = true;
-            this.txtProxyLog.Size = new System.Drawing.Size(623, 337);
+            this.txtProxyLog.Size = new System.Drawing.Size(549, 311);
             this.txtProxyLog.TabIndex = 1;
             // 
             // btnStartCrawlProxy
@@ -178,10 +179,10 @@
             this.dgvProxySiteInfo.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvProxySiteInfo.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvProxySiteInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvProxySiteInfo.Location = new System.Drawing.Point(632, 166);
+            this.dgvProxySiteInfo.Location = new System.Drawing.Point(558, 154);
             this.dgvProxySiteInfo.Name = "dgvProxySiteInfo";
             this.dgvProxySiteInfo.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvProxySiteInfo.Size = new System.Drawing.Size(623, 337);
+            this.dgvProxySiteInfo.Size = new System.Drawing.Size(549, 311);
             this.dgvProxySiteInfo.TabIndex = 0;
             // 
             // tmrResult
@@ -218,12 +219,13 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 32.31132F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 67.68868F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 305F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1424, 812);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1276, 774);
             this.tableLayoutPanel1.TabIndex = 18;
             // 
             // panel1
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.panel1, 3);
+            this.panel1.Controls.Add(this.btnDebug);
             this.panel1.Controls.Add(this.button2);
             this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.label7);
@@ -244,7 +246,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1418, 157);
+            this.panel1.Size = new System.Drawing.Size(1270, 145);
             this.panel1.TabIndex = 0;
             // 
             // button2
@@ -315,9 +317,9 @@
             this.panel2.Controls.Add(this.label4);
             this.panel2.Controls.Add(this.btnRefreshProxySiteInfo);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(1261, 166);
+            this.panel2.Location = new System.Drawing.Point(1113, 154);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(160, 337);
+            this.panel2.Size = new System.Drawing.Size(160, 311);
             this.panel2.TabIndex = 2;
             // 
             // label4
@@ -332,11 +334,11 @@
             // txtGiftLog
             // 
             this.txtGiftLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtGiftLog.Location = new System.Drawing.Point(3, 509);
+            this.txtGiftLog.Location = new System.Drawing.Point(3, 471);
             this.txtGiftLog.Multiline = true;
             this.txtGiftLog.Name = "txtGiftLog";
             this.txtGiftLog.ReadOnly = true;
-            this.txtGiftLog.Size = new System.Drawing.Size(623, 300);
+            this.txtGiftLog.Size = new System.Drawing.Size(549, 300);
             this.txtGiftLog.TabIndex = 3;
             // 
             // dgvGiftCrawlResult
@@ -344,10 +346,10 @@
             this.dgvGiftCrawlResult.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvGiftCrawlResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvGiftCrawlResult.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvGiftCrawlResult.Location = new System.Drawing.Point(632, 509);
+            this.dgvGiftCrawlResult.Location = new System.Drawing.Point(558, 471);
             this.dgvGiftCrawlResult.Name = "dgvGiftCrawlResult";
             this.dgvGiftCrawlResult.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvGiftCrawlResult.Size = new System.Drawing.Size(623, 300);
+            this.dgvGiftCrawlResult.Size = new System.Drawing.Size(549, 300);
             this.dgvGiftCrawlResult.TabIndex = 4;
             // 
             // tmrCrawlSpeed
@@ -355,11 +357,21 @@
             this.tmrCrawlSpeed.Interval = 3000;
             this.tmrCrawlSpeed.Tick += new System.EventHandler(this.tmrCrawlSpeed_Tick);
             // 
+            // btnDebug
+            // 
+            this.btnDebug.Location = new System.Drawing.Point(780, 84);
+            this.btnDebug.Name = "btnDebug";
+            this.btnDebug.Size = new System.Drawing.Size(102, 23);
+            this.btnDebug.TabIndex = 23;
+            this.btnDebug.Text = "Debug";
+            this.btnDebug.UseVisualStyleBackColor = true;
+            this.btnDebug.Click += new System.EventHandler(this.btnDebug_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1424, 812);
+            this.ClientSize = new System.Drawing.Size(1276, 774);
             this.Controls.Add(this.tableLayoutPanel1);
             this.MaximizeBox = false;
             this.Name = "frmMain";
@@ -410,6 +422,7 @@
         private System.Windows.Forms.DataGridView dgvGiftCrawlResult;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btnDebug;
     }
 }
 

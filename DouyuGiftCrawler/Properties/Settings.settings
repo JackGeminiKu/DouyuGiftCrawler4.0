@@ -6,7 +6,7 @@
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="ConnectionString" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Data Source=JACK-PC\SQLSERVER2008;Initial Catalog=Douyu2;Integrated Security=True</Value>
+      <Value Profile="(Default)">Data Source=localhost;Initial Catalog=Douyu2;Integrated Security=True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -9,9 +9,6 @@ using AngleSharp.Parser.Html;
 
 namespace Jack4net.Proxy.Crawlers
 {
-    /// <summary>
-    /// proxy crawler base
-    /// </summary>
     public abstract class ProxyCrawlerBase
     {
         public ProxyCrawlerBase()
@@ -28,7 +25,9 @@ namespace Jack4net.Proxy.Crawlers
                 do {
                     try {
                         LogService.DebugFormat("[代理] 爬取代理 " + url);
+                        OnPageCrawlBegin(url);
                         var pageBytes = client.DownloadData(url);
+                        OnPageCrawlCompleted(url);
                         var page = ToPageString(pageBytes);
 
                         LogService.DebugFormat("[代理] 解析代理 " + url);
@@ -61,6 +60,22 @@ namespace Jack4net.Proxy.Crawlers
 
         public event EventHandler<ProxyCrawledEventArgs> ProxyCrawled;
 
+        public event EventHandler<PageCrawlBeginEventArgs> PageCrawlBegin;
+
+        public event EventHandler<PageCrawlCompletedEventArgs> PageCrawlCompleted;
+
+        protected void OnPageCrawlBegin(string uri)
+        {
+            if (PageCrawlBegin != null)
+                PageCrawlBegin(this, new PageCrawlBeginEventArgs(uri));
+        }
+
+        protected void OnPageCrawlCompleted(string uri)
+        {
+            if (PageCrawlCompleted != null)
+                PageCrawlCompleted(this, new PageCrawlCompletedEventArgs(uri));
+        }
+
         protected void OnProxyCrawled(string ip, int port, string proxySite)
         {
             ip = ip.Trim();
@@ -82,9 +97,6 @@ namespace Jack4net.Proxy.Crawlers
 
 
 
-    /// <summary>
-    /// proxy event args
-    /// </summary>
     public class ProxyCrawledEventArgs : EventArgs
     {
         public ProxyCrawledEventArgs(string ip, int port, string proxySite)
@@ -97,5 +109,29 @@ namespace Jack4net.Proxy.Crawlers
         public string Ip { get; private set; }
         public int Port { get; private set; }
         public string ProxySite { get; private set; }
+    }
+
+
+
+    public class PageCrawlBeginEventArgs : EventArgs
+    {
+        public PageCrawlBeginEventArgs(string url)
+        {
+            Url = url;
+        }
+
+        public string Url { get; private set; }
+    }
+
+
+
+    public class PageCrawlCompletedEventArgs : EventArgs
+    {
+        public PageCrawlCompletedEventArgs(string url)
+        {
+            Url = url;
+        }
+
+        public string Url { get; private set; }
     }
 }

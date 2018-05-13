@@ -25,11 +25,24 @@ namespace Jack4net.Proxy
     {
         static ConcurrentDictionary<string, ProxyInfo> _proxyInfos = new ConcurrentDictionary<string, ProxyInfo>();
         static List<ProxyCrawlerBase> _proxyCrawlers = new List<ProxyCrawlerBase>();
+        static int _pageCount = 0;
+        static readonly object _pageCountLocker = new object();
 
         public static int ProxyCount { get { return _proxyInfos.Count; } }
 
+        public static int PageCount
+        {
+            get
+            {
+                lock (_pageCountLocker) {
+                    return _pageCount;
+                }
+            }
+        }
+
         public static void BeginCrawl()
         {
+            _pageCount = 0;
             if (CrawlBegin != null)
                 CrawlBegin(null, new CrawlBeginEventArgs());
 
@@ -50,12 +63,13 @@ namespace Jack4net.Proxy
 
                 foreach (var proxyCrawler in _proxyCrawlers) {
                     proxyCrawler.ProxyCrawled += new EventHandler<ProxyCrawledEventArgs>(proxyCrawler_ProxyCrawled);
+                    proxyCrawler.PageCrawlCompleted += new EventHandler<PageCrawlCompletedEventArgs>(proxyCrawler_PageCrawlCompleted);
                 }
             }
 
             List<Task> taskList = new List<Task>();
             foreach (var proxyCrawler in _proxyCrawlers) {
-                var task = new Task(proxyCrawler.CrawlProxy);            
+                var task = new Task(proxyCrawler.CrawlProxy);
                 taskList.Add(task);
             }
 
@@ -99,6 +113,13 @@ namespace Jack4net.Proxy
 
             if (ProxyCrawled != null)
                 ProxyCrawled(null, e);
+        }
+
+        static void proxyCrawler_PageCrawlCompleted(object sender, PageCrawlCompletedEventArgs e)
+        {
+            lock (_pageCountLocker) {
+                _pageCount++;
+            }
         }
     }
 

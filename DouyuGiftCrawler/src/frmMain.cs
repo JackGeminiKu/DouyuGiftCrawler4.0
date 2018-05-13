@@ -16,6 +16,9 @@ using Jack4net.Proxy;
 using Jack4net.Proxy.Crawlers;
 using System.Runtime.Remoting.Messaging;
 using Douyu.Gift;
+using Jack4net.Crawler;
+using System.Threading.Tasks;
+using AngleSharp.Parser.Html;
 
 namespace DouyuGiftCrawler
 {
@@ -175,7 +178,8 @@ namespace DouyuGiftCrawler
             };
             ProxyCrawler.CrawlCompleted += delegate {
                 watch.Stop();
-                MessageBox.Show(string.Format("共爬到代理{0}个, 耗时{1}秒", count, watch.Elapsed.TotalSeconds));
+                MessageBox.Show(string.Format("共处理页面{0}个, 爬到代理{1}个, 耗时{2}秒",
+                    ProxyCrawler.PageCount, count, watch.Elapsed.TotalSeconds));
             };
 
             Console.WriteLine(ProxyValidator.MaxCount);
@@ -203,6 +207,61 @@ namespace DouyuGiftCrawler
             MessageBox.Show(string.Format("proxy validate: 耗时{0}秒", watch.Elapsed.TotalSeconds));
             ProxyValidator.Save();
             button2.Enabled = true;
+        }
+
+        private void btnDebug_Click(object sender, EventArgs e)
+        {
+            ServicePointManager.DefaultConnectionLimit = 100;
+            Dictionary<string, string> pageInfo = new Dictionary<string, string>();
+            pageInfo["http://www.66ip.cn/1.html"] = "GB2312";
+            pageInfo["http://ab57.ru/downloads/proxyold.txt"] = "UTF-8";
+            //pageInfo["http://www.atomintersoft.com/high_anonymity_elite_proxy_list"] = "UTF-8";
+            pageInfo["http://www.data5u.com/"] = "UTF-8";
+            pageInfo["http://www.goubanjia.com/"] = "UTF-8";
+            pageInfo["http://www.ip3366.net/free/?stype=1"] = "GB2312";
+            pageInfo["https://www.kuaidaili.com/free/inha/1"] = "UTF-8";
+            pageInfo["http://www.proxylists.net/http_highanon.txt"] = "UTF-8";
+            pageInfo["https://www.us-proxy.org/"] = "UTF-8";
+            pageInfo["http://www.xicidaili.com/nn/"] = "UTF-8";
+
+            pageInfo["http://www.baidu.com"] = "UTF-8";
+            pageInfo["http://wwww.ganji.com"] = "UTF-8";
+            pageInfo["http://www.ifeng.com"] = "UTF-8";
+            pageInfo["http://www.douyu.com/"] = "UTF-8";
+            pageInfo["http://www.oschina.net/"] = "UTF-8";
+            pageInfo["http://www.cnblogs.com"] = "UTF-8";
+            pageInfo["https://www.tuhu.cn"] = "UTF-8";
+            pageInfo["http://www.zuojiaju.com/"] = "UTF-8";
+            pageInfo["http://www.new-farmer.com/portal.php"] = "UTF-8";
+            pageInfo["http://www.fang.com"] = "UTF-8";
+            pageInfo["http://www.beiwo.tv"] = "UTF-8";
+
+            //var webClient = new WebClient();
+            //var pageBytes = webClient.DownloadData("http://www.hao123.com");
+            //var page = Encoding.UTF8.GetString(pageBytes);
+
+            //var document = new HtmlParser().Parse(page);
+            //var links = document.QuerySelectorAll("a");
+            //foreach (var link in links) {
+            //    pageInfo[link.GetAttribute("href")] = "UTF-8";
+            //}
+
+            var tasks = new List<Task>();
+            foreach (var item in pageInfo) {
+                var pageCrawler = new PageCrawler();
+                pageCrawler.Url = item.Key;
+                pageCrawler.EncodingName = item.Value;
+                var task = new Task(pageCrawler.CrawlPage);
+                tasks.Add(task);
+            }
+
+            var watch = Stopwatch.StartNew();
+            foreach (var item in tasks) {
+                item.Start();
+            }
+
+            Task.WaitAll(tasks.ToArray());
+            MessageBox.Show(watch.ElapsedMilliseconds.ToString());
         }
     }
 

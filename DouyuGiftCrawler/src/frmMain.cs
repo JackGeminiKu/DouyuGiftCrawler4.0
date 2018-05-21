@@ -31,16 +31,14 @@ namespace DouyuGiftCrawler
 
         private void frmMain_Load(object sender, EventArgs e)
         {
-            System.Net.ServicePointManager.DefaultConnectionLimit = 100;
-
-            DouyuService.LoadSession();
-            ProxyPool.ProxyCrawled += new EventHandler<ProxyCrawledEventArgs>(ProxyPool_ProxyCrawled);
-            ProxyPool.ProxyValidated += new EventHandler<ProxyValidatedEventArgs>(ProxyPool_ProxyValidated);
-            GiftCrawler.CrawledGift += new EventHandler<CrawledGiftEventArgs>(GiftCrawler_CrawlingGift);
-            GiftCrawler.CrawlingRoom += new EventHandler<CrawlRoomEventArgs>(GiftCrawler_CrawlingRoom);
-            GiftCrawler.CrawledRoom += new EventHandler<CrawlRoomEventArgs>(GiftCrawler_CrawledRoom);
-            tmrCrawlSpeed.Start();
-            tmrResult.Start();
+            //DouyuService.LoadSession();
+            //ProxyPool.ProxyCrawled += new EventHandler<ProxyCrawledEventArgs>(ProxyPool_ProxyCrawled);
+            //ProxyPool.ProxyValidated += new EventHandler<ProxyValidatedEventArgs>(ProxyPool_ProxyValidated);
+            //GiftCrawler.CrawledGift += new EventHandler<CrawledGiftEventArgs>(GiftCrawler_CrawlingGift);
+            //GiftCrawler.CrawlingRoom += new EventHandler<CrawlRoomEventArgs>(GiftCrawler_CrawlingRoom);
+            //GiftCrawler.CrawledRoom += new EventHandler<CrawlRoomEventArgs>(GiftCrawler_CrawledRoom);
+            //tmrCrawlSpeed.Start();
+            //tmrResult.Start();
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -212,23 +210,24 @@ namespace DouyuGiftCrawler
         private void btnDebug_Click(object sender, EventArgs e)
         {
             ServicePointManager.DefaultConnectionLimit = 100;
+            ServicePointManager.Expect100Continue = false;
             Dictionary<string, string> pageInfo = new Dictionary<string, string>();
             pageInfo["http://www.66ip.cn/1.html"] = "GB2312";
-            pageInfo["http://ab57.ru/downloads/proxyold.txt"] = "UTF-8";
+            //pageInfo["http://ab57.ru/downloads/proxyold.txt"] = "UTF-8";
             //pageInfo["http://www.atomintersoft.com/high_anonymity_elite_proxy_list"] = "UTF-8";
             pageInfo["http://www.data5u.com/"] = "UTF-8";
             pageInfo["http://www.goubanjia.com/"] = "UTF-8";
             pageInfo["http://www.ip3366.net/free/?stype=1"] = "GB2312";
             pageInfo["https://www.kuaidaili.com/free/inha/1"] = "UTF-8";
-            pageInfo["http://www.proxylists.net/http_highanon.txt"] = "UTF-8";
-            pageInfo["https://www.us-proxy.org/"] = "UTF-8";
+            //pageInfo["http://www.proxylists.net/http_highanon.txt"] = "UTF-8";
+            //pageInfo["https://www.us-proxy.org/"] = "UTF-8";
             pageInfo["http://www.xicidaili.com/nn/"] = "UTF-8";
 
             pageInfo["http://www.baidu.com"] = "UTF-8";
-            pageInfo["http://wwww.ganji.com"] = "UTF-8";
+            //pageInfo["http://wwww.ganji.com"] = "UTF-8";
             pageInfo["http://www.ifeng.com"] = "UTF-8";
             pageInfo["http://www.douyu.com/"] = "UTF-8";
-            pageInfo["http://www.oschina.net/"] = "UTF-8";
+            //pageInfo["http://www.oschina.net/"] = "UTF-8";
             pageInfo["http://www.cnblogs.com"] = "UTF-8";
             pageInfo["https://www.tuhu.cn"] = "UTF-8";
             pageInfo["http://www.zuojiaju.com/"] = "UTF-8";
@@ -249,10 +248,7 @@ namespace DouyuGiftCrawler
             var tasks = new List<Task>();
             foreach (var item in pageInfo) {
                 var pageCrawler = new PageCrawler();
-                pageCrawler.Url = item.Key;
-                pageCrawler.EncodingName = item.Value;
-                var task = new Task(pageCrawler.CrawlPage);
-                tasks.Add(task);
+                tasks.Add(new Task(() => pageCrawler.CrawlPage(item.Key, item.Value)));
             }
 
             var watch = Stopwatch.StartNew();
@@ -261,7 +257,7 @@ namespace DouyuGiftCrawler
             }
 
             Task.WaitAll(tasks.ToArray());
-            MessageBox.Show(watch.ElapsedMilliseconds.ToString());
+            MessageBox.Show(string.Format("速度: {0}", pageInfo.Count / watch.Elapsed.TotalSeconds));
         }
     }
 

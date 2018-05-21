@@ -97,6 +97,7 @@
     <Compile Include="src\Douyu.Gift\Gift.cs" />
     <Compile Include="src\Douyu.Gift\GiftService.cs" />
     <Compile Include="src\Jack4net.Crawler\PageCrawler.cs" />
+    <Compile Include="src\Jack4net.Crawler\PageCrawlerManager.cs" />
     <Compile Include="src\Jack4net.Proxy.Crawlers\ProxyCrawler_Ip3366.cs" />
     <Compile Include="src\Jack4net.Proxy.Crawlers\ProxyCrawler_ProxyLists.cs" />
     <Compile Include="src\Jack4net.Proxy.Crawlers\ProxyCrawler_us-proxy.cs" />

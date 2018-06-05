@@ -25,7 +25,7 @@ namespace Jack4net.Proxy
         public static void Clear()
         {
             lock (_dbLocker) {
-                _connection.Execute("delete from proxy_result");
+                _connection.Execute("delete from ProxyResult");
             }
         }
 
@@ -33,18 +33,18 @@ namespace Jack4net.Proxy
         {
             lock (_dbLocker) {
                 var rowCount = _connection.ExecuteScalar<int>(
-                    "select count(*) from proxy_result where ProxySite = @ProxySite",
+                    "select count(*) from ProxyResult where ProxySite = @ProxySite",
                     new { ProxySite = proxySite }
                 );
                 if (rowCount == 0) {
                     _connection.Execute(
-                        "insert into proxy_result(ProxySite, CrawledCount, ValidCount, InvalidCount) " +
+                        "insert into ProxyResult(ProxySite, CrawledCount, ValidCount, InvalidCount) " +
                         "values(@ProxySite, @CrawledCount, 0, 0)",
                         new { ProxySite = proxySite, CrawledCount = count }
                     );
                 } else {
                     _connection.Execute(
-                        "update proxy_result set CrawledCount = CrawledCount + @Count where ProxySite = @ProxySite",
+                        "update ProxyResult set CrawledCount = CrawledCount + @Count where ProxySite = @ProxySite",
                         new { Count = count, ProxySite = proxySite }
                     );
                 }
@@ -54,7 +54,7 @@ namespace Jack4net.Proxy
         public static void UpdateValidCount(string proxySite, int count)
         {
             lock (_dbLocker) {
-                _connection.Execute("update proxy_result set ValidCount = ValidCount + @Count where ProxySite = @ProxySite",
+                _connection.Execute("update ProxyResult set ValidCount = ValidCount + @Count where ProxySite = @ProxySite",
                     new { Count = count, ProxySite = proxySite }
                 );
             }
@@ -64,7 +64,7 @@ namespace Jack4net.Proxy
         {
             lock (_dbLocker) {
                 _connection.Execute(
-                    "update proxy_result set InvalidCount = InvalidCount + @Count where ProxySite = @ProxySite",
+                    "update ProxyResult set InvalidCount = InvalidCount + @Count where ProxySite = @ProxySite",
                     new { Count = count, ProxySite = proxySite }
                 );
             }
@@ -77,7 +77,7 @@ namespace Jack4net.Proxy
                     "select ProxySite, CrawledCount, ValidCount, InvalidCount, " +
                     "CrawledCount - ValidCount - InvalidCount as UnvalidatedCount, " +
                     "ValidCount * 100 / CrawledCount as ValidPercent " +
-                    "from proxy_result order by ValidPercent desc");
+                    "from ProxyResult order by ValidPercent desc");
 
                 var infoList = new SortableBindingList<ProxyResultItem>();
                 for (var i = 0; i < allInfo.Count(); ++i) {

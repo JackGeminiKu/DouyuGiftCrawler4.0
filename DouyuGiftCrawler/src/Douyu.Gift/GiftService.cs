@@ -26,7 +26,7 @@ namespace Douyu.Gift
             try {
                 _conn = new SqlConnection(DouyuGiftCrawler.Properties.Settings.Default.ConnectionString);
                 //_conn.Open();
-                _adapter = new SqlDataAdapter("select * from gift_category", _conn);
+                _adapter = new SqlDataAdapter("select * from GiftCategory", _conn);
                 _builder = new SqlCommandBuilder(_adapter);
                 _dataSet = new DataSet();
                 _adapter.Fill(_dataSet, "gift_category");
